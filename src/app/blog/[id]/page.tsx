@@ -3,17 +3,28 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { posts } from '@/app/utils/blogData';
 
+// Define the type for the `params` object
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+// Generate static paths for dynamic routes
 export const generateStaticParams = async () => {
   return posts.map((post) => ({
-    id: post.id.toString(),
+    id: post.id.toString(), // Ensure `id` is a string
   }));
 };
 
-const BlogDetail = async ({ params }: { params: { id: string } }) => {
+// BlogDetail component
+const BlogDetail = async ({ params }: PageProps) => {
+  // Find the post by ID
   const post = posts.find((p) => p.id === Number(params.id));
 
+  // Handle 404 if the post is not found
   if (!post) {
-    notFound(); // Handles 404 errors if the post is not found
+    notFound();
   }
 
   return (
@@ -34,6 +45,8 @@ const BlogDetail = async ({ params }: { params: { id: string } }) => {
           <Image
             src={post.image}
             alt={post.title}
+            width={1200} // Add width and height for Next.js Image optimization
+            height={400}
             className="h-64 w-full object-cover"
           />
           <div className="p-6">
