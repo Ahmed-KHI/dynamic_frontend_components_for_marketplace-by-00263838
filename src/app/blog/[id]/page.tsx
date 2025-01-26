@@ -3,13 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { posts } from '@/app/utils/blogData';
 
-// Define the type for the `params` object
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
 // Generate static paths for dynamic routes
 export const generateStaticParams = async () => {
   return posts.map((post) => ({
@@ -18,7 +11,7 @@ export const generateStaticParams = async () => {
 };
 
 // BlogDetail component
-const BlogDetail = async ({ params }: PageProps) => {
+const BlogDetail = async ({ params }: { params: { id: string } }) => {
   // Find the post by ID
   const post = posts.find((p) => p.id === Number(params.id));
 
