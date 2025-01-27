@@ -1,10 +1,23 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
+// Define the Product type
+interface Product {
+  _id: string;
+  title: string;
+  price: number;
+  priceWithoutDiscount: number;
+  badge: string;
+  imageUrl: string;
+  category: string;
+  description: string;
+  inventory: number;
+  tags: string[];
+  slug: string;
+}
 import { client } from "@/sanity/lib/client";
 import ProductCard from "./ProductCard";
-
-
 
 // Fetch products from the Sanity CMS
 async function fetchProducts() {
@@ -23,28 +36,13 @@ async function fetchProducts() {
   }`;
   try {
     const products = await client.fetch(query);
+    console.log("Fetched products:", products); // Add this line for debugging
     return products;
   } catch (error) {
     console.error("Error fetching products:", error);
     return [];
   }
 }
-
-// Product interface
-interface Product {
-  _id: string; // Unique identifier for the product
-  title: string;
-  price: number;
-  priceWithoutDiscount?: number; // Optional field
-  badge?: string; // Optional field
-  imageUrl: string | null; // Image URL from Sanity
-  category?: { _ref: string }; // Optional reference to a category
-  description?: string; // Optional field
-  inventory: number;
-  tags?: string[]; // Optional array of tags
-  slug: string; // Unique slug for the product
-}
-
 
 // ProductGrid Component
 export default function ProductGrid() {
@@ -120,7 +118,6 @@ export default function ProductGrid() {
           </div>
         )}
       </div>
-      
     </div>
   );
 }
