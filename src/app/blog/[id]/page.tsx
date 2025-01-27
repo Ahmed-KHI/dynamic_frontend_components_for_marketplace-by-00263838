@@ -3,17 +3,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { posts } from '@/app/utils/blogData';
 
-// Define the type for the component props
-interface BlogDetailProps {
-  searchParams: Promise<{
+// Define the type for the params object
+interface PageProps {
+  params: {
     id: string;
-  }>;
+  };
 }
 
 // BlogDetail component
-export default async function BlogDetail(props: BlogDetailProps) {
-  const searchParams = await props.searchParams;
-  const { id } = searchParams;
+const BlogDetail = ({ params }: PageProps) => {
+  const { id } = params;
 
   // Find the post by ID
   const post = posts.find((p) => p.id === Number(id));
@@ -24,7 +23,7 @@ export default async function BlogDetail(props: BlogDetailProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white"> {/* Explicitly set background color */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800">{post.title}</h1>
@@ -53,4 +52,6 @@ export default async function BlogDetail(props: BlogDetailProps) {
       </main>
     </div>
   );
-}
+};
+
+export default BlogDetail;
