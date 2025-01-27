@@ -10,11 +10,31 @@ import { addToCart } from "@/app/redux/cartSlice";
 import AboutNewsletterSection from "@/components/AboutPageComponents/NewsletterSection";
 import { toast } from "sonner";
 import { IoAddCircle } from "react-icons/io5";
+import { client } from "@/sanity/lib/client";
 
+// Fetch products from the Sanity CMS
 async function fetchProducts() {
-  const response = await fetch("/api/products");
-  const data = await response.json();
-  return data;
+  const query = `*[_type == "products"]{
+    _id,
+    title,
+    price,
+    priceWithoutDiscount,
+    badge,
+    "imageUrl": image.asset->url,
+    category,
+    description,
+    inventory,
+    tags,
+    "slug": slug.current
+  }`;
+  try {
+    const products = await client.fetch(query);
+    console.log("Fetched products:", products); // Add this line
+    return products;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
 }
 
 const ProductPage = () => {
@@ -51,20 +71,18 @@ const ProductPage = () => {
   }
 
   const handleAddToCart = (product: any) => {
-    
-      const cartItem = {
-        id: product._id,
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        image: product.imageUrl,
-        quantity,
-      };
-      dispatch(addToCart(cartItem));
-      toast("Item has been successfully added to the cart", {
-        icon: <IoAddCircle />,
-      });
-    
+    const cartItem = {
+      id: product._id,
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      image: product.imageUrl,
+      quantity,
+    };
+    dispatch(addToCart(cartItem));
+    toast("Item has been successfully added to the cart", {
+      icon: <IoAddCircle />,
+    });
   };
 
   return (
@@ -123,4 +141,5 @@ const ProductPage = () => {
   );
 };
 
+export default ProductPage;
 export default ProductPage;
