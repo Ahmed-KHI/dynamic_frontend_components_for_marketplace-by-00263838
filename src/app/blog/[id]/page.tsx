@@ -3,17 +3,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { posts } from '@/app/utils/blogData';
 
-// Generate static paths for dynamic routes
-export const generateStaticParams = async () => {
-  return posts.map((post) => ({
-    id: post.id.toString(), // Ensure `id` is a string
-  }));
-};
+// Define the type for the component props
+interface BlogDetailProps {
+  searchParams: Promise<{
+    id: string;
+  }>;
+}
 
 // BlogDetail component
-const BlogDetail = async ({ params }: { params: { id: string } }) => {
+export default async function BlogDetail(props: BlogDetailProps) {
+  const searchParams = await props.searchParams;
+  const { id } = searchParams;
+
   // Find the post by ID
-  const post = posts.find((p) => p.id === Number(params.id));
+  const post = posts.find((p) => p.id === Number(id));
 
   // Handle 404 if the post is not found
   if (!post) {
@@ -50,6 +53,4 @@ const BlogDetail = async ({ params }: { params: { id: string } }) => {
       </main>
     </div>
   );
-};
-
-export default BlogDetail;
+}
