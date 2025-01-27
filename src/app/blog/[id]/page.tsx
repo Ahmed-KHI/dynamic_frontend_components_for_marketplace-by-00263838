@@ -10,8 +10,15 @@ export const generateStaticParams = async () => {
   }));
 };
 
+// Define the type for the params object
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
 // BlogDetail component
-const BlogDetail = async ({ params }: { params: { id: string } }) => {
+const BlogDetail = ({ params }: PageProps) => {
   // Find the post by ID
   const post = posts.find((p) => p.id === Number(params.id));
 
